@@ -7,15 +7,24 @@
 //
 
 import UIKit
+import CoreLocation
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    private let locationManager = CLLocationManager()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+
+        if let value = launchOptions?[.location] as? Bool, value == true {
+            
+            setupLocalNotification { (error) in
+                
+            }
+        }
+        
         return true
     }
 
@@ -30,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        locationManager.stopMonitoringSignificantLocationChanges()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -38,9 +47,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        locationManager.delegate = self
+        locationManager.startMonitoringSignificantLocationChanges()
     }
 
 
 }
 
+extension AppDelegate: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        
+    }
+}
+
+extension AppDelegate {
+    
+    fileprivate func setupLocalNotification(completion: @escaping (Error?) -> ()) {
+        let center =  UNUserNotificationCenter.current()
+        let content = UNMutableNotificationContent()
+        content.title = NSLocalizedString("You're nearby 😱", comment: "")
+        content.body = "LDR has four activities to remind you about."
+        
+        // TODO: Add location trigger perhaps?
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval:2.0, repeats: false)
+        
+        // TODO: Update content identifier
+        let request = UNNotificationRequest(identifier: "ContentIdentifier", content: content, trigger: trigger)
+        
+        center.add(request) { (error) in
+            if let error = error {
+                print("Error displaying notification: \(error)")
+            }
+            completion(error)
+        }
+    }
+}

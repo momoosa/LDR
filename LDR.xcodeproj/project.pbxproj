@@ -12,6 +12,13 @@
 		3EE5071A21D02A0600DDDF07 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EE5071821D02A0600DDDF07 /* Main.storyboard */; };
 		3EE5071C21D02A0900DDDF07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EE5071B21D02A0900DDDF07 /* Assets.xcassets */; };
 		3EE5071F21D02A0900DDDF07 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EE5071D21D02A0900DDDF07 /* LaunchScreen.storyboard */; };
+		3EE5072721D02AF900DDDF07 /* CloudKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE5072621D02AF900DDDF07 /* CloudKitService.swift */; };
+		3EE5072B21D02B8200DDDF07 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EE5072A21D02B8200DDDF07 /* CloudKit.framework */; };
+		3EE5072D21D02C0800DDDF07 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE5072C21D02C0800DDDF07 /* User.swift */; };
+		3EE5072F21D02CE200DDDF07 /* UserSharedLocationRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE5072E21D02CE200DDDF07 /* UserSharedLocationRecord.swift */; };
+		3EE5073121D02FBD00DDDF07 /* CKAccountStatus+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE5073021D02FBD00DDDF07 /* CKAccountStatus+Extensions.swift */; };
+		3EE5073321D031E400DDDF07 /* Syncable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE5073221D031E400DDDF07 /* Syncable.swift */; };
+		3EE5073521D0388800DDDF07 /* CKRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE5073421D0388800DDDF07 /* CKRecord+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +29,14 @@
 		3EE5071B21D02A0900DDDF07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3EE5071E21D02A0900DDDF07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3EE5072021D02A0900DDDF07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3EE5072621D02AF900DDDF07 /* CloudKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitService.swift; sourceTree = "<group>"; };
+		3EE5072821D02B7600DDDF07 /* LDR.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LDR.entitlements; sourceTree = "<group>"; };
+		3EE5072A21D02B8200DDDF07 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		3EE5072C21D02C0800DDDF07 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		3EE5072E21D02CE200DDDF07 /* UserSharedLocationRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSharedLocationRecord.swift; sourceTree = "<group>"; };
+		3EE5073021D02FBD00DDDF07 /* CKAccountStatus+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CKAccountStatus+Extensions.swift"; sourceTree = "<group>"; };
+		3EE5073221D031E400DDDF07 /* Syncable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Syncable.swift; sourceTree = "<group>"; };
+		3EE5073421D0388800DDDF07 /* CKRecord+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CKRecord+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EE5072B21D02B8200DDDF07 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +56,7 @@
 			children = (
 				3EE5071321D02A0600DDDF07 /* LDR */,
 				3EE5071221D02A0600DDDF07 /* Products */,
+				3EE5072921D02B8200DDDF07 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,14 +71,29 @@
 		3EE5071321D02A0600DDDF07 /* LDR */ = {
 			isa = PBXGroup;
 			children = (
+				3EE5072821D02B7600DDDF07 /* LDR.entitlements */,
 				3EE5071421D02A0600DDDF07 /* AppDelegate.swift */,
 				3EE5071621D02A0600DDDF07 /* ViewController.swift */,
+				3EE5073421D0388800DDDF07 /* CKRecord+Extensions.swift */,
+				3EE5072621D02AF900DDDF07 /* CloudKitService.swift */,
+				3EE5073021D02FBD00DDDF07 /* CKAccountStatus+Extensions.swift */,
+				3EE5072C21D02C0800DDDF07 /* User.swift */,
+				3EE5072E21D02CE200DDDF07 /* UserSharedLocationRecord.swift */,
+				3EE5073221D031E400DDDF07 /* Syncable.swift */,
 				3EE5071821D02A0600DDDF07 /* Main.storyboard */,
 				3EE5071B21D02A0900DDDF07 /* Assets.xcassets */,
 				3EE5071D21D02A0900DDDF07 /* LaunchScreen.storyboard */,
 				3EE5072021D02A0900DDDF07 /* Info.plist */,
 			);
 			path = LDR;
+			sourceTree = "<group>";
+		};
+		3EE5072921D02B8200DDDF07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3EE5072A21D02B8200DDDF07 /* CloudKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -96,6 +128,17 @@
 				TargetAttributes = {
 					3EE5071021D02A0600DDDF07 = {
 						CreatedOnToolsVersion = 10.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -135,7 +178,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EE5073121D02FBD00DDDF07 /* CKAccountStatus+Extensions.swift in Sources */,
+				3EE5072D21D02C0800DDDF07 /* User.swift in Sources */,
+				3EE5072721D02AF900DDDF07 /* CloudKitService.swift in Sources */,
+				3EE5072F21D02CE200DDDF07 /* UserSharedLocationRecord.swift in Sources */,
+				3EE5073521D0388800DDDF07 /* CKRecord+Extensions.swift in Sources */,
 				3EE5071721D02A0600DDDF07 /* ViewController.swift in Sources */,
+				3EE5073321D031E400DDDF07 /* Syncable.swift in Sources */,
 				3EE5071521D02A0600DDDF07 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -282,6 +331,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = LDR/LDR.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D6W66G49J8;
 				INFOPLIST_FILE = LDR/Info.plist;
@@ -300,6 +350,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = LDR/LDR.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D6W66G49J8;
 				INFOPLIST_FILE = LDR/Info.plist;
