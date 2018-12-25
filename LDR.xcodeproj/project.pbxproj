@@ -73,6 +73,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3EB1E98B21D2D39B00C83507 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				3EE5073421D0388800DDDF07 /* CKRecord+Extensions.swift */,
+				3EE5073021D02FBD00DDDF07 /* CKAccountStatus+Extensions.swift */,
+				3E6FE87321D2849C000FA5BD /* CKContainerApplicationPermissionStatus+Extensions.swift */,
+				3E9AB39221D297010025F503 /* CLAuthorizationStatus+Extensions.swift */,
+				3E9AB39421D2BB8B0025F503 /* UNAuthorizationStatus+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		3EB1E98C21D2D3B500C83507 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				3EE5073221D031E400DDDF07 /* Syncable.swift */,
+				3E63056E21D2448300EAAE59 /* CellViewModel.swift */,
+				3E63056A21D2442800EAAE59 /* DataSource.swift */,
+				3E63057021D24B2100EAAE59 /* TableViewDataSource.swift */,
+				3EBCE9EC21D24E0100B319FD /* TableViewCell.swift */,
+				3EBCE9EE21D24E2E00B319FD /* Constants.swift */,
+				3E63056C21D2444C00EAAE59 /* DataSourceSection.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		3EE5070821D02A0600DDDF07 = {
 			isa = PBXGroup;
 			children = (
@@ -95,24 +121,14 @@
 			children = (
 				3EE5072821D02B7600DDDF07 /* LDR.entitlements */,
 				3EE5071421D02A0600DDDF07 /* AppDelegate.swift */,
-				3E63056A21D2442800EAAE59 /* DataSource.swift */,
-				3E63057021D24B2100EAAE59 /* TableViewDataSource.swift */,
-				3EBCE9EA21D24C8700B319FD /* PermissionTableViewCell.swift */,
-				3EBCE9EC21D24E0100B319FD /* TableViewCell.swift */,
-				3EBCE9EE21D24E2E00B319FD /* Constants.swift */,
-				3EB2F06521D2507600F8954E /* PermissionItem.swift */,
-				3E63056C21D2444C00EAAE59 /* DataSourceSection.swift */,
-				3E63056E21D2448300EAAE59 /* CellViewModel.swift */,
 				3EE5071621D02A0600DDDF07 /* ViewController.swift */,
-				3EE5073421D0388800DDDF07 /* CKRecord+Extensions.swift */,
+				3EB1E98C21D2D3B500C83507 /* Common */,
+				3EBCE9EA21D24C8700B319FD /* PermissionTableViewCell.swift */,
+				3EB2F06521D2507600F8954E /* PermissionItem.swift */,
 				3EE5072621D02AF900DDDF07 /* CloudKitService.swift */,
-				3EE5073021D02FBD00DDDF07 /* CKAccountStatus+Extensions.swift */,
-				3E6FE87321D2849C000FA5BD /* CKContainerApplicationPermissionStatus+Extensions.swift */,
-				3E9AB39221D297010025F503 /* CLAuthorizationStatus+Extensions.swift */,
-				3E9AB39421D2BB8B0025F503 /* UNAuthorizationStatus+Extensions.swift */,
+				3EB1E98B21D2D39B00C83507 /* Extensions */,
 				3EE5072C21D02C0800DDDF07 /* User.swift */,
 				3EE5072E21D02CE200DDDF07 /* UserSharedLocationRecord.swift */,
-				3EE5073221D031E400DDDF07 /* Syncable.swift */,
 				3EE5071821D02A0600DDDF07 /* Main.storyboard */,
 				3EE5071B21D02A0900DDDF07 /* Assets.xcassets */,
 				3EE5071D21D02A0900DDDF07 /* LaunchScreen.storyboard */,

@@ -46,17 +46,20 @@ final class ViewController: UIViewController {
                 if results.isEmpty == true {
                     
                     let newRecord = UserSharedLocationRecord()
-                    newRecord.firstUserLocationLongitude = self.location?.coordinate.longitude ?? 0.0
-                    newRecord.firstUserLocationLatitude = self.location?.coordinate.latitude ?? 0.0
+                    newRecord.firstUserLocation = self.location
                     
-                    CloudKitService.shared.sync(withCloudKitRecordType: UserSharedLocationRecord.self, syncables: [newRecord], completion: { ([[AnyHashable : Any]]?, error) in
+                    CloudKitService.shared.sync(withCloudKitRecordType: UserSharedLocationRecord.self, syncables: [newRecord], completion: { (records, error) in
                         
+                        UserDefaults.standard.set(records?.first!.recordID.recordName, forKey: "SavedRecordID")
                     })
+                   
                 }
             }
         }
     }
     
+    // Fetch record with ID
+    // Update with local data
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
@@ -76,6 +79,9 @@ final class ViewController: UIViewController {
                         
                         self.requestNotificationsAccess()
                     }
+                } else {
+                    self.items[3].actionTitle = nil
+                    self.items[3].action = nil
                 }
                 
                 self.items[3].statusText = settings.authorizationStatus.localizedStatus
@@ -157,21 +163,27 @@ final class ViewController: UIViewController {
     private func updateCloudKitStatusLabel() {
         CloudKitService.shared.requestCloudKitAccountStatus { (status, error) in
             
-            if var cloudKitItem = self.items.first(where: { $0.identifier == "cloudKitItem" }) {
+            if var cloudKitItem = self.items.first(where: { $0.identifier == "cloudKitItem" }), let index = self.items.index(of: cloudKitItem) {
                 
                 // TODO: Check Equatable
                 cloudKitItem.status = status.permissionItemStatus
                 cloudKitItem.statusText = status.localizedStatus
-                self.items[0] = cloudKitItem
+                self.items[index] = cloudKitItem
                 
                 if status == CKAccountStatus.available {
-                    self.items[1].isEnabled = true
-                    self.items[1].actionTitle = NSLocalizedString("Request User Discoverability", comment: "")
-                    self.items[1].action = {
+                    
+                    if var visibilityItem = self.items.first(where: { $0.identifier == "cloudKitVisibilityItem"}), let index = self.items.index(of: visibilityItem) {
                         
-                        self.requestUserDiscoverabilityAccess()
+                        visibilityItem.isEnabled = true
+                        visibilityItem.actionTitle = NSLocalizedString("Request User Discoverability", comment: "")
+                        visibilityItem.action = {
+                            
+                            self.requestUserDiscoverabilityAccess()
+                        }
+                        
+                        self.items[index] = visibilityItem
                     }
-                    cloudKitItem.actionTitle = NSLocalizedString("", comment: "")
+                    cloudKitItem.actionTitle = nil
                 } else {
                     self.items[1].actionTitle = nil
                 }
@@ -273,10 +285,9 @@ extension ViewController: CLLocationManagerDelegate {
                     if results.isEmpty == true {
                         
                         let newRecord = UserSharedLocationRecord()
-                        newRecord.firstUserLocationLongitude = self.location?.coordinate.longitude ?? 0.0
-                        newRecord.firstUserLocationLatitude = self.location?.coordinate.latitude ?? 0.0
-                        
-                        CloudKitService.shared.sync(withCloudKitRecordType: UserSharedLocationRecord.self, syncables: [newRecord], completion: { ([[AnyHashable : Any]]?, error) in
+                        newRecord.firstUserLocation = self.location
+
+                        CloudKitService.shared.sync(withCloudKitRecordType: UserSharedLocationRecord.self, syncables: [newRecord], completion: { results, error in
                             
                         })
                     }

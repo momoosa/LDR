@@ -12,6 +12,7 @@ import CloudKit
 public typealias CloudKitServiceCKRecordCompletion = (CKRecord?, Error?) -> ()
 public typealias CloudKitServiceCKRecordIDCompletion = (CKRecord.ID?, Error?) -> ()
 public typealias CloudKitServiceDictionariesCompletion = ([[AnyHashable: Any]]?, Error?) -> ()
+public typealias CloudKitServiceRecordsCompletion = ([CKRecord]?, Error?) -> ()
 public typealias CloudKitServiceCompletion = (Any?, Error?) -> ()
 
 enum CloudKitServiceError: Error {
@@ -72,7 +73,7 @@ final class CloudKitService {
     func requestUserDiscoverabilityAccess(completion: ((CKContainer_Application_PermissionStatus?, Error?) -> ())?) {
         container.requestApplicationPermission(.userDiscoverability) { (status, error) in
             DispatchQueue.main.async {
-            completion?(status, error)
+                completion?(status, error)
             }
         }
     }
@@ -81,20 +82,20 @@ final class CloudKitService {
         container.fetchUserRecordID(completionHandler: { (recordID, error) in
             
             DispatchQueue.main.async {
-
-            if let error = error {
                 
-                debugPrint("Error fetching CloudKit user ID: \(error)")
-                completion?(nil, error)
-            } else if let recordID = recordID {
-                
-                completion?(recordID, nil)
-            } else {
-                completion?(nil, CloudKitServiceError.missingRecord)
-            }
+                if let error = error {
+                    
+                    debugPrint("Error fetching CloudKit user ID: \(error)")
+                    completion?(nil, error)
+                } else if let recordID = recordID {
+                    
+                    completion?(recordID, nil)
+                } else {
+                    completion?(nil, CloudKitServiceError.missingRecord)
+                }
             }
         })
-    
+        
     }
     
     func fetchRecord(_ recordID: CKRecord.ID, completion: CloudKitServiceCKRecordCompletion?) {
@@ -188,7 +189,7 @@ final class CloudKitService {
     }
     
     
-    func sync(withCloudKitRecordType type: Syncable.Type, syncables: [Syncable], completion: @escaping CloudKitServiceDictionariesCompletion) {
+    func sync(withCloudKitRecordType type: Syncable.Type, syncables: [Syncable], completion: @escaping CloudKitServiceRecordsCompletion) {
         
         var recordsToSave = [CKRecord]()
         
@@ -231,11 +232,7 @@ final class CloudKitService {
                 
                 if let savedRecords = savedRecords {
                     
-                    let dictionaries = savedRecords.map({ (record) -> [AnyHashable: Any] in
-                        
-                        return record.dictionaryWithValues(forKeys: record.allKeys())
-                    })
-                    completion(dictionaries, error)
+                    completion(savedRecords, error)
                 } else {
                     
                     completion(nil, error)

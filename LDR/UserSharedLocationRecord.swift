@@ -6,16 +6,17 @@
 //  Copyright © 2018 Mo Moosa Ltd. All rights reserved.
 //
 
-import Foundation
+import CoreLocation
 
 final class UserSharedLocationRecord: NSObject {
     @objc var identifier: String?
     @objc var firstUserIdentifier: String?
     @objc var secondUserIdentifier: String?
-    @objc var firstUserLocationLatitude: Double = 0.0
-    @objc var firstUserLocationLongitude: Double = 0.0
-    @objc var secondUserLocationLatitude: Double = 0.0
-    @objc var secondUserLocationLongitude: Double = 0.0
+    @objc var firstUserLocation: CLLocation?
+    @objc var secondUserLocation: CLLocation?
+    @objc var firstUserLocationModifiedDate: Date?
+    @objc var secondUserLocationModifiedDate: Date?
+
     var shouldSync: Bool = false
     var shouldDestroy: Bool = false
     var lastModifiedDate: Date? = Date()
@@ -29,12 +30,10 @@ extension UserSharedLocationRecord: Syncable {
     func JSONRepresentation() -> [String : Any] {
         var dictionary = [String: Any]()
         
+        dictionary[#keyPath(firstUserLocation)] = firstUserLocation
+        dictionary[#keyPath(secondUserLocation)] = secondUserLocation
         dictionary[#keyPath(firstUserIdentifier)] = firstUserIdentifier
         dictionary[#keyPath(secondUserIdentifier)] = secondUserIdentifier
-        dictionary[#keyPath(firstUserLocationLatitude)] = firstUserLocationLatitude
-        dictionary[#keyPath(firstUserLocationLongitude)] = firstUserLocationLongitude
-        dictionary[#keyPath(secondUserLocationLatitude)] = secondUserLocationLatitude
-        dictionary[#keyPath(secondUserLocationLongitude)] = secondUserLocationLongitude
         
         return dictionary
     }
