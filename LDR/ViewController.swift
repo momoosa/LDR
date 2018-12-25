@@ -11,13 +11,10 @@ import CoreLocation
 import UserNotifications
 
 final class ViewController: UIViewController {
-    
-    @IBOutlet private weak var userLocationLabel: UILabel!
-    @IBOutlet private weak var cloudKitStatusLabel: UILabel!
-    @IBOutlet private weak var registerNotificationsButton: UIButton!
+    @IBOutlet private weak var tableView: UITableView!
     private let locationManager = CLLocationManager()
     private var location: CLLocation?
-    
+    private let dataSource = TableViewDataSource()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,8 +22,9 @@ final class ViewController: UIViewController {
         configureLocationManager()
         configureSignificationLocationsUpdating()
         configureRegisterNotificationsButton()
+        configureTableViewDataSource()
+        configureItems()
     }
-    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -69,11 +67,13 @@ final class ViewController: UIViewController {
             
             switch settings.authorizationStatus {
             case .authorized, .provisional:
-                self.registerNotificationsButton.setTitle(NSLocalizedString("Registered for Notifications ✅", comment: ""), for: .disabled)
-                self.registerNotificationsButton.isEnabled = false
+                break
+//                self.registerNotificationsButton.setTitle(NSLocalizedString("Registered for Notifications ✅", comment: ""), for: .disabled)
+//                self.registerNotificationsButton.isEnabled = false
             case .denied, .notDetermined:
-                self.registerNotificationsButton.isSpringLoaded = true
-                self.registerNotificationsButton.isEnabled = true
+                break
+//                self.registerNotificationsButton.isSpringLoaded = true
+//                self.registerNotificationsButton.isEnabled = true
             }
         }
     }
@@ -91,11 +91,33 @@ final class ViewController: UIViewController {
         }
         locationManager.startMonitoringSignificantLocationChanges()
     }
+    
+    private func configureTableViewDataSource() {
+        tableView.dataSource = dataSource
+        
+        dataSource.cellReuseIdentifierBlock = { item in
+            
+            return "PermissionTableViewCell"
+        }
+    }
+    
+    private func configureItems() {
+        
+        let cloudKitPermissionItem = PermissionItem.init(identifier: "cloudKit", title: NSLocalizedString("iCloud Account", comment: ""), status: nil, action: nil)
+
+        let notificationPermissionItem = PermissionItem.init(identifier: "cloudKit", title: NSLocalizedString("Notifications", comment: ""), status: nil, action: nil)
+        
+        let viewModels = [cloudKitPermissionItem, notificationPermissionItem].map({ PermissionCellViewModel(permissionItem: $0) })
+        let dataSourceSection = DataSourceSection(items: viewModels)
+        
+        dataSource.sections = [dataSourceSection]
+
+    }
     // MARK: - Content
     
     private func updateCloudKitStatusLabel() {
         CloudKitService.shared.requestCloudKitAccountStatus { (status, error) in
-            self.cloudKitStatusLabel.text = status.localizedStatus
+//            self.cloudKitStatusLabel.text = status.localizedStatus
         }
     }
     // MARK: - Notifications
