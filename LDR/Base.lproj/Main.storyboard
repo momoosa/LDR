@@ -46,13 +46,22 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kvw-UB-2XC">
+                                <rect key="frame" x="16" y="187" width="343" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="handleUserDiscoverabilityButtonTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dS0-3d-1qy"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="kvw-UB-2XC" firstAttribute="top" secondItem="ZbE-K7-xGt" secondAttribute="bottom" constant="8" id="0ae-oV-SbJ"/>
                             <constraint firstItem="ZbE-K7-xGt" firstAttribute="leading" secondItem="a4n-eW-8DB" secondAttribute="leading" id="70o-nd-NxI"/>
                             <constraint firstItem="ZbE-K7-xGt" firstAttribute="top" secondItem="a4n-eW-8DB" secondAttribute="bottom" constant="8" id="9Ja-Xy-X1J"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="SCY-8N-WRW" secondAttribute="trailing" constant="8" id="9om-9t-stv"/>
                             <constraint firstItem="ZbE-K7-xGt" firstAttribute="trailing" secondItem="a4n-eW-8DB" secondAttribute="trailing" id="I16-tc-4rb"/>
+                            <constraint firstItem="kvw-UB-2XC" firstAttribute="leading" secondItem="8xC-V8-uKP" secondAttribute="leading" id="LMy-4D-JJZ"/>
                             <constraint firstItem="a4n-eW-8DB" firstAttribute="trailing" secondItem="8xC-V8-uKP" secondAttribute="trailing" id="QnX-Yv-cBE"/>
                             <constraint firstItem="a4n-eW-8DB" firstAttribute="top" secondItem="8xC-V8-uKP" secondAttribute="bottom" constant="8" id="RAe-QN-Zmq"/>
                             <constraint firstItem="8xC-V8-uKP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="RDb-hi-n3v"/>
@@ -61,6 +70,7 @@
                             <constraint firstItem="a4n-eW-8DB" firstAttribute="leading" secondItem="8xC-V8-uKP" secondAttribute="leading" id="gx9-dN-vTh"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="SCY-8N-WRW" secondAttribute="bottom" constant="92" id="kIT-Zi-lXq"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8xC-V8-uKP" secondAttribute="trailing" constant="16" id="knj-iV-VH4"/>
+                            <constraint firstItem="kvw-UB-2XC" firstAttribute="trailing" secondItem="8xC-V8-uKP" secondAttribute="trailing" id="pId-81-xle"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

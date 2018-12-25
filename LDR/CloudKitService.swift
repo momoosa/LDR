@@ -10,6 +10,7 @@ import Foundation
 import CloudKit
 
 public typealias CloudKitServiceCKRecordCompletion = (CKRecord?, Error?) -> ()
+public typealias CloudKitServiceCKRecordIDCompletion = (CKRecord.ID?, Error?) -> ()
 public typealias CloudKitServiceDictionariesCompletion = ([[AnyHashable: Any]]?, Error?) -> ()
 public typealias CloudKitServiceCompletion = (Any?, Error?) -> ()
 
@@ -24,20 +25,32 @@ final class CloudKitService {
     private let container = CKContainer.default()
     private let privateDatabase = CKContainer(identifier: "iCloud.com.moosa.ios.LDR").privateCloudDatabase
     private let publicDatabase = CKContainer(identifier: "iCloud.com.moosa.ios.LDR").publicCloudDatabase
-
+    
     
     init() {
         
-        fetchUserID { (record, error) in
+        fetchUserID { [unowned self] (record, error) in
             
+            if let error = error {
+                print("Error fetching user ID: \(error)")
+                return
+            }
+            
+            guard let record = record else {
+                return
+            }
+            
+            self.container.discoverUserIdentity(withUserRecordID: record, completionHandler: { (identity, error) in
+                print("\(identity)")
+            })
             self.setupCloudKitSubscriptions(forClasses: [UserSharedLocationRecord.self])
         }
     }
-
+    
     func requestCloudKitAccountStatus(completion: ((CKAccountStatus, Error?) -> ())?) {
-
+        
         container.accountStatus { [unowned self] (accountStatus, error) in
-
+            
             if let error = error {
                 print(error)
             }
@@ -49,21 +62,24 @@ final class CloudKitService {
             self.accountStatus = accountStatus
         }
     }
-
-    private func fetchUserID(completion: CloudKitServiceCKRecordCompletion?) {
+    
+    func requestUserDiscoverabilityAccess(completion: CloudKitServiceCompletion?) {
+        
+        container.requestApplicationPermission(.userDiscoverability) { (status, error) in
+            completion?(status, error)
+        }
+    }
+    
+    private func fetchUserID(completion: CloudKitServiceCKRecordIDCompletion?) {
         container.fetchUserRecordID(completionHandler: { (recordID, error) in
             
             if let error = error {
                 
                 debugPrint("Error fetching CloudKit user ID: \(error)")
-                
+                completion?(nil, error)
             } else if let recordID = recordID {
                 
-                self.fetchRecord(recordID, completion: { (record, error) in
-                    User.cloudKitIdentifier = recordID.recordName
-                    
-                    completion?(record, nil)
-                })
+                completion?(recordID, nil)
             } else {
                 completion?(nil, CloudKitServiceError.missingRecord)
             }
@@ -74,7 +90,7 @@ final class CloudKitService {
     func fetchRecord(_ recordID: CKRecord.ID, completion: CloudKitServiceCKRecordCompletion?) {
         
         publicDatabase.fetch(withRecordID: recordID,
-                              completionHandler: ({record, error in
+                             completionHandler: ({record, error in
                                 
                                 if let error = error {
                                     
@@ -160,7 +176,7 @@ final class CloudKitService {
         
         self.publicDatabase.add(operation)
     }
-
+    
     
     func sync(withCloudKitRecordType type: Syncable.Type, syncables: [Syncable], completion: @escaping CloudKitServiceDictionariesCompletion) {
         
@@ -192,33 +208,33 @@ final class CloudKitService {
                 }
                 let recordID = CKRecord.ID(recordName: syncableID)
                 let recordType = String(describing: type)
-
+                
                 let record = CKRecord(recordType: recordType, recordID: recordID)
                 
                 record.update(withDictionary: localObject.JSONRepresentation())
                 recordsToSave.append(record)
             }
             
-                let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: nil)
+            let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: nil)
+            
+            operation.modifyRecordsCompletionBlock = { (savedRecords, deletedRecordIDs, error) in
                 
-                operation.modifyRecordsCompletionBlock = { (savedRecords, deletedRecordIDs, error) in
+                if let savedRecords = savedRecords {
                     
-                    if let savedRecords = savedRecords {
+                    let dictionaries = savedRecords.map({ (record) -> [AnyHashable: Any] in
                         
-                        let dictionaries = savedRecords.map({ (record) -> [AnyHashable: Any] in
-                            
-                            return record.dictionaryWithValues(forKeys: record.allKeys())
-                        })
-                        completion(dictionaries, error)
-                    } else {
-                        
-                        completion(nil, error)
-                    }
+                        return record.dictionaryWithValues(forKeys: record.allKeys())
+                    })
+                    completion(dictionaries, error)
+                } else {
+                    
+                    completion(nil, error)
                 }
-                
-                self.publicDatabase.add(operation)
             }
-
+            
+            self.publicDatabase.add(operation)
         }
         
     }
+    
+}

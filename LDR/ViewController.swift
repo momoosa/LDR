@@ -119,6 +119,12 @@ final class ViewController: UIViewController {
             self.configureRegisterNotificationsButton()
         }
     }
+    
+    @IBAction func handleUserDiscoverabilityButtonTap(_ sender: Any) {
+        CloudKitService.shared.requestUserDiscoverabilityAccess { (status, error) in
+            
+        }
+    }
 }
 
 extension ViewController: CLLocationManagerDelegate {
