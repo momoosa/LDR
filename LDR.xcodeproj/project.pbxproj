@@ -11,6 +11,8 @@
 		3E63056D21D2444C00EAAE59 /* DataSourceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E63056C21D2444C00EAAE59 /* DataSourceSection.swift */; };
 		3E63056F21D2448300EAAE59 /* CellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E63056E21D2448300EAAE59 /* CellViewModel.swift */; };
 		3E63057121D24B2100EAAE59 /* TableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E63057021D24B2100EAAE59 /* TableViewDataSource.swift */; };
+		3E6FE87421D2849C000FA5BD /* CKContainerApplicationPermissionStatus+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6FE87321D2849C000FA5BD /* CKContainerApplicationPermissionStatus+Extensions.swift */; };
+		3E9AB39321D297010025F503 /* CLAuthorizationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9AB39221D297010025F503 /* CLAuthorizationStatus.swift */; };
 		3EB2F06621D2507600F8954E /* PermissionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB2F06521D2507600F8954E /* PermissionItem.swift */; };
 		3EBCE9EB21D24C8700B319FD /* PermissionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCE9EA21D24C8700B319FD /* PermissionTableViewCell.swift */; };
 		3EBCE9ED21D24E0100B319FD /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCE9EC21D24E0100B319FD /* TableViewCell.swift */; };
@@ -34,6 +36,8 @@
 		3E63056C21D2444C00EAAE59 /* DataSourceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceSection.swift; sourceTree = "<group>"; };
 		3E63056E21D2448300EAAE59 /* CellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellViewModel.swift; sourceTree = "<group>"; };
 		3E63057021D24B2100EAAE59 /* TableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDataSource.swift; sourceTree = "<group>"; };
+		3E6FE87321D2849C000FA5BD /* CKContainerApplicationPermissionStatus+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CKContainerApplicationPermissionStatus+Extensions.swift"; sourceTree = "<group>"; };
+		3E9AB39221D297010025F503 /* CLAuthorizationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLAuthorizationStatus.swift; sourceTree = "<group>"; };
 		3EB2F06521D2507600F8954E /* PermissionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionItem.swift; sourceTree = "<group>"; };
 		3EBCE9EA21D24C8700B319FD /* PermissionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionTableViewCell.swift; sourceTree = "<group>"; };
 		3EBCE9EC21D24E0100B319FD /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
@@ -101,6 +105,8 @@
 				3EE5073421D0388800DDDF07 /* CKRecord+Extensions.swift */,
 				3EE5072621D02AF900DDDF07 /* CloudKitService.swift */,
 				3EE5073021D02FBD00DDDF07 /* CKAccountStatus+Extensions.swift */,
+				3E6FE87321D2849C000FA5BD /* CKContainerApplicationPermissionStatus+Extensions.swift */,
+				3E9AB39221D297010025F503 /* CLAuthorizationStatus.swift */,
 				3EE5072C21D02C0800DDDF07 /* User.swift */,
 				3EE5072E21D02CE200DDDF07 /* UserSharedLocationRecord.swift */,
 				3EE5073221D031E400DDDF07 /* Syncable.swift */,
@@ -213,10 +219,12 @@
 				3EE5071721D02A0600DDDF07 /* ViewController.swift in Sources */,
 				3E63057121D24B2100EAAE59 /* TableViewDataSource.swift in Sources */,
 				3EE5073321D031E400DDDF07 /* Syncable.swift in Sources */,
+				3E6FE87421D2849C000FA5BD /* CKContainerApplicationPermissionStatus+Extensions.swift in Sources */,
 				3EBCE9EB21D24C8700B319FD /* PermissionTableViewCell.swift in Sources */,
 				3E63056D21D2444C00EAAE59 /* DataSourceSection.swift in Sources */,
 				3E63056B21D2442800EAAE59 /* DataSource.swift in Sources */,
 				3E63056F21D2448300EAAE59 /* CellViewModel.swift in Sources */,
+				3E9AB39321D297010025F503 /* CLAuthorizationStatus.swift in Sources */,
 				3EE5071521D02A0600DDDF07 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

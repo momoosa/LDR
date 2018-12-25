@@ -9,12 +9,14 @@
 import UIKit
 import CoreLocation
 import UserNotifications
+import CloudKit
 
 final class ViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     private let locationManager = CLLocationManager()
     private var location: CLLocation?
     private let dataSource = TableViewDataSource()
+    private var items = [PermissionItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,11 +105,32 @@ final class ViewController: UIViewController {
     
     private func configureItems() {
         
-        let cloudKitPermissionItem = PermissionItem.init(identifier: "cloudKit", title: NSLocalizedString("iCloud Account", comment: ""), status: nil, action: nil)
+        let cloudKitDescription = NSLocalizedString("Your iCloud account is used to sync data between you and your friend.", comment: "")
+        let cloudKitPermissionItem = PermissionItem.init(identifier: "cloudKitItem", title: NSLocalizedString("iCloud Account", comment: ""), status: nil, description: cloudKitDescription, actionTitle: nil, isEnabled: true, action: {
+            
+            self.updateCloudKitStatusLabel()
+        })
 
-        let notificationPermissionItem = PermissionItem.init(identifier: "cloudKit", title: NSLocalizedString("Notifications", comment: ""), status: nil, action: nil)
+        let cloudKitVisibilityDescription = NSLocalizedString("Your account visibility needs to be enabled so that friends can look up your account.", comment: "")
+
+        let cloudKitVisibilityPermissionItem = PermissionItem.init(identifier: "cloudKitVisibilityItem", title: NSLocalizedString("iCloud Account Visibility", comment: ""), status: nil, description: cloudKitVisibilityDescription, actionTitle: nil, isEnabled: false, action: {
+            
+            self.updateCloudKitVisibilityStatusLabel()
+        })
+
+        let locationDescription = NSLocalizedString("Your location is used to determine when you're close to your friend.", comment: "")
+
+        let locationPermissionItem = PermissionItem.init(identifier: "locationItem", title: NSLocalizedString("Your Location", comment: ""), status: CLLocationManager.authorizationStatus().localizedStatus, description: locationDescription, actionTitle: nil, isEnabled: true, action: {
+            
+            self.updateLocationStatus()
+        })
         
-        let viewModels = [cloudKitPermissionItem, notificationPermissionItem].map({ PermissionCellViewModel(permissionItem: $0) })
+        let notificationDescription = NSLocalizedString("Enabling notifications will allow the app to notify you of your list when you're near your friend.", comment: "")
+
+        let notificationPermissionItem = PermissionItem.init(identifier: "notificationItem", title: NSLocalizedString("Notifications", comment: ""), status: nil, description: notificationDescription, actionTitle: nil, isEnabled: true, action: nil)
+        
+        items = [cloudKitPermissionItem, cloudKitVisibilityPermissionItem, locationPermissionItem, notificationPermissionItem]
+        let viewModels = items.map({ PermissionCellViewModel(permissionItem: $0) })
         let dataSourceSection = DataSourceSection(items: viewModels)
         
         dataSource.sections = [dataSourceSection]
@@ -117,9 +140,58 @@ final class ViewController: UIViewController {
     
     private func updateCloudKitStatusLabel() {
         CloudKitService.shared.requestCloudKitAccountStatus { (status, error) in
-//            self.cloudKitStatusLabel.text = status.localizedStatus
+            
+            if var cloudKitItem = self.items.first(where: { $0.identifier == "cloudKitItem" }) {
+                
+                // TODO: Check Equatable
+                cloudKitItem.status = status.localizedStatus
+                self.items[0] = cloudKitItem
+                
+                if status == CKAccountStatus.available {
+                    self.items[1].isEnabled = true
+                    self.items[1].actionTitle = NSLocalizedString("Request User Discoverability", comment: "")
+                    self.items[1].action = {
+                        
+                        self.requestUserDiscoverabilityAccess()
+                    }
+                    cloudKitItem.actionTitle = NSLocalizedString("", comment: "")
+                }
+                let viewModels = self.items.map({ PermissionCellViewModel(permissionItem: $0) })
+                let dataSourceSection = DataSourceSection(items: viewModels)
+                
+                self.dataSource.sections = [dataSourceSection]
+
+                self.tableView.reloadData()
+            }
         }
     }
+    
+    private func updateCloudKitVisibilityStatusLabel() {
+        
+        CloudKitService.shared.requestCloudKitUserVisibilityStatus { (status, error) in
+            
+            if var cloudKitItem = self.items.first(where: { $0.identifier == "cloudKitVisibilityItem" }) {
+                
+                // TODO: Check Equatable
+                cloudKitItem.status = status.localizedStatus
+                self.items[1] = cloudKitItem
+                
+                let viewModels = self.items.map({ PermissionCellViewModel(permissionItem: $0) })
+                let dataSourceSection = DataSourceSection(items: viewModels)
+                
+                self.dataSource.sections = [dataSourceSection]
+                
+                self.tableView.reloadData()
+            
+        }
+    }
+    }
+    
+    private func updateLocationStatus() {
+        
+        locationManager.requestAlwaysAuthorization()
+    }
+
     // MARK: - Notifications
     
     @objc func handleNotification(notification: Notification) {
@@ -142,9 +214,19 @@ final class ViewController: UIViewController {
         }
     }
     
-    @IBAction func handleUserDiscoverabilityButtonTap(_ sender: Any) {
+    private func requestUserDiscoverabilityAccess() {
         CloudKitService.shared.requestUserDiscoverabilityAccess { (status, error) in
             
+            self.items[1].isEnabled = true
+            self.items[1].status = status?.localizedStatus
+            self.items[1].actionTitle = NSLocalizedString("Request User Discoverability", comment: "")
+            
+            let viewModels = self.items.map({ PermissionCellViewModel(permissionItem: $0) })
+            let dataSourceSection = DataSourceSection(items: viewModels)
+            
+            self.dataSource.sections = [dataSourceSection]
+
+            self.tableView.reloadData()
         }
     }
 }

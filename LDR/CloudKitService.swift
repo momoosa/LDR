@@ -63,8 +63,13 @@ final class CloudKitService {
         }
     }
     
-    func requestUserDiscoverabilityAccess(completion: CloudKitServiceCompletion?) {
-        
+    func requestCloudKitUserVisibilityStatus(completion: ((CKContainer_Application_PermissionStatus, Error?) -> ())?) {
+        container.requestApplicationPermission(.userDiscoverability) { (status, error) in
+            completion?(status, error)
+        }
+    }
+    
+    func requestUserDiscoverabilityAccess(completion: ((CKContainer_Application_PermissionStatus?, Error?) -> ())?) {
         container.requestApplicationPermission(.userDiscoverability) { (status, error) in
             completion?(status, error)
         }
@@ -84,7 +89,7 @@ final class CloudKitService {
                 completion?(nil, CloudKitServiceError.missingRecord)
             }
         })
-        
+    
     }
     
     func fetchRecord(_ recordID: CKRecord.ID, completion: CloudKitServiceCKRecordCompletion?) {
