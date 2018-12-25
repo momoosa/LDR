@@ -31,4 +31,17 @@ extension CKAccountStatus {
             return ""
         }
     }
+    
+    var permissionItemStatus: PermissionItemStatus {
+        
+        switch self {
+        case .available:
+            return .optimal
+        case .noAccount, .restricted:
+            return .needsAssistance
+        case .couldNotDetermine:
+            return .uncertain
+        }
+    }
+
 }

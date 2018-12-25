@@ -40,9 +40,6 @@ final class CloudKitService {
                 return
             }
             
-            self.container.discoverUserIdentity(withUserRecordID: record, completionHandler: { (identity, error) in
-                print("\(identity)")
-            })
             self.setupCloudKitSubscriptions(forClasses: [UserSharedLocationRecord.self])
         }
     }
@@ -65,19 +62,26 @@ final class CloudKitService {
     
     func requestCloudKitUserVisibilityStatus(completion: ((CKContainer_Application_PermissionStatus, Error?) -> ())?) {
         container.requestApplicationPermission(.userDiscoverability) { (status, error) in
-            completion?(status, error)
+            
+            DispatchQueue.main.async {
+                completion?(status, error)
+            }
         }
     }
     
     func requestUserDiscoverabilityAccess(completion: ((CKContainer_Application_PermissionStatus?, Error?) -> ())?) {
         container.requestApplicationPermission(.userDiscoverability) { (status, error) in
+            DispatchQueue.main.async {
             completion?(status, error)
+            }
         }
     }
     
     private func fetchUserID(completion: CloudKitServiceCKRecordIDCompletion?) {
         container.fetchUserRecordID(completionHandler: { (recordID, error) in
             
+            DispatchQueue.main.async {
+
             if let error = error {
                 
                 debugPrint("Error fetching CloudKit user ID: \(error)")
@@ -87,6 +91,7 @@ final class CloudKitService {
                 completion?(recordID, nil)
             } else {
                 completion?(nil, CloudKitServiceError.missingRecord)
+            }
             }
         })
     

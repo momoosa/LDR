@@ -29,4 +29,16 @@ extension CLAuthorizationStatus {
             return  NSLocalizedString("Authorization restricted", comment: "")
         }
     }
+    
+    var permissionItemStatus: PermissionItemStatus {
+        
+        switch self {
+        case .authorizedAlways, .authorizedWhenInUse:
+            return .optimal
+        case .denied, .restricted:
+            return .needsAssistance
+        case .notDetermined:
+            return .uncertain
+        }
+    }
 }

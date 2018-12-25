@@ -29,4 +29,17 @@ extension CKContainer_Application_PermissionStatus {
             return ""
         }
     }
+    
+    var permissionItemStatus: PermissionItemStatus {
+        
+        switch self {
+        case .granted:
+            return .optimal
+        case .couldNotComplete, .denied:
+            return .needsAssistance
+        case .initialState:
+            return .uncertain
+        }
+    }
+
 }

@@ -7,15 +7,31 @@
 //
 
 import Foundation
+import CloudKit
+import CoreLocation
+enum PermissionItemStatus {
+    case optimal,
+    uncertain,
+    needsAssistance
+}
 
-struct PermissionItem {
-    var identifier: String
+final class PermissionItem {
+    var status = PermissionItemStatus.uncertain
+    var identifier: String = ""
     var title: String?
-    var status: String?
+    var statusText: String?
     var description: String?
     var actionTitle: String?
     var isEnabled = false
     var action: Action?
+    
+    init(identifier: String, title: String?, statusText: String?, isEnabled: Bool, action: Action?) {
+        self.identifier = identifier
+        self.title = title
+        self.statusText = statusText
+        self.isEnabled = isEnabled
+        self.action = action
+    }
 }
 
 extension PermissionItem: Equatable {

@@ -17,16 +17,26 @@ final class PermissionCellViewModel: CellViewModel {
     var description: String?
     var title: String?
     var isEnabled = false
+    var statusColor: UIColor?
     
     init(permissionItem: PermissionItem) {
         
         self.identifier = permissionItem.identifier
         self.title = permissionItem.title
         self.actionTitle = permissionItem.actionTitle
-        self.subtitle = permissionItem.status
+        self.subtitle = permissionItem.statusText
         self.action = permissionItem.action
         self.isEnabled = permissionItem.isEnabled
         self.description = permissionItem.description
+        
+        switch permissionItem.status {
+        case .optimal:
+            self.statusColor = UIColor(red:0.33, green:0.62, blue:0.00, alpha:1.00)
+        case .uncertain:
+            self.statusColor = UIColor(red:1.00, green:0.76, blue:0.13, alpha:1.00)
+        case .needsAssistance:
+            self.statusColor = UIColor(red:0.60, green:0.20, blue:0.06, alpha:1.00)
+        }
     }
 }
 
@@ -63,6 +73,15 @@ final class PermissionTableViewCell: TableViewCell {
             descriptionLabel.text = model.description
             action = model.action
             button.setTitle(model.actionTitle, for: [])
+            indicatorView.backgroundColor = model.statusColor
+            
+            if model.action == nil || model.actionTitle == nil {
+
+                button.isHidden = true
+            } else {
+                button.isHidden = false
+            }
+            
             var newAlpha: CGFloat = 1.0
             
             if model.isEnabled == true {
@@ -82,4 +101,5 @@ final class PermissionTableViewCell: TableViewCell {
     @IBAction func handleButtonTap(_ sender: Any) {
         action?()
     }
+    
 }
