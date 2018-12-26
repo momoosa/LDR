@@ -17,6 +17,7 @@ final class ViewController: UIViewController {
     private let locationManager = CLLocationManager()
     private var location: CLLocation?
     @IBOutlet private weak var tableView: UITableView!
+    private var isUpdatingLocation = false
     
     // MARK: - View Life Cycle
     
@@ -37,26 +38,8 @@ final class ViewController: UIViewController {
         updateCloudKitStatusUI()
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleNotification), name: NSNotification.Name.CKAccountChanged, object: nil)
-        
-        CloudKitService.shared.fetchRecords(ofType: UserSharedLocationRecord.self) { (results, error) in
-            if let error = error {
-                print("Error fetching CloudKit Records: \(error)")
-            }
-            
-            if let results = results as? [Any] {
-                
-                if results.isEmpty == true {
-                    
-                    let newRecord = UserSharedLocationRecord()
-                    newRecord.firstUserLocation = self.location
-                    
-                    CloudKitService.shared.sync(withCloudKitRecordType: UserSharedLocationRecord.self, syncables: [newRecord], completion: { (records, error) in
-                        
-                        UserDefaults.standard.set(records?.first!.recordID.recordName, forKey: "SavedRecordID")
-                    })
-                }
-            }
-        }
+
+        updateLocationRecord(completion: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -257,6 +240,44 @@ final class ViewController: UIViewController {
             self.updateTableView()
         }
     }
+    
+    func updateLocationRecord(completion: ((UserSharedLocationRecord?, Error?) -> ())?) {
+        CloudKitService.shared.fetchRecords(ofType: UserSharedLocationRecord.self) { (results, error) in
+            if let error = error {
+                print("Error fetching CloudKit Records: \(error)")
+            }
+            
+            if let results = results as? [Any] {
+                
+                if results.isEmpty == true {
+                    
+                    if self.isUpdatingLocation == false {
+                        
+                        let newRecord = UserSharedLocationRecord()
+                        newRecord.firstUserLocation = self.location
+                        newRecord.firstUserLocationModifiedDate = Date()
+                        newRecord.secondUserLocation = CLLocation(latitude: 51.50998, longitude: -0.1337)
+                        newRecord.secondUserLocationModifiedDate = Date()
+                        self.isUpdatingLocation = true
+                        CloudKitService.shared.sync(withCloudKitRecordType: UserSharedLocationRecord.self, syncables: [newRecord], completion: { results, error in
+                            self.isUpdatingLocation = false
+                            completion?(newRecord, error)
+                        })
+                    }
+                } else {
+                    
+                    let sharedLocation = UserSharedLocationRecord()
+                    sharedLocation.updateFromDictionary((results.first as! CKRecord).dictionaryRepresentation())
+                    sharedLocation.firstUserLocation = self.location
+                    sharedLocation.firstUserLocationModifiedDate = Date()
+                    
+                    CloudKitService.shared.sync(withCloudKitRecordType: UserSharedLocationRecord.self, syncables: [sharedLocation], completion: { (records, error) in
+                        completion?(sharedLocation, error)
+                    })
+                }
+            }
+        }
+    }
 }
 
 extension ViewController: CLLocationManagerDelegate {
@@ -264,27 +285,14 @@ extension ViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         if let newLocation = locations.first {
+            
+            let shouldUpdate = location != nil
             location = newLocation
             
-            CloudKitService.shared.fetchRecords(ofType: UserSharedLocationRecord.self) { (results, error) in
-                if let error = error {
-                    print("Error fetching CloudKit Records: \(error)")
-                }
-                
-                if let results = results as? [Any] {
-                    
-                    if results.isEmpty == true {
-                        
-                        let newRecord = UserSharedLocationRecord()
-                        newRecord.firstUserLocation = self.location
-                        
-                        CloudKitService.shared.sync(withCloudKitRecordType: UserSharedLocationRecord.self, syncables: [newRecord], completion: { results, error in
-                            
-                        })
-                    }
-                }
+            if shouldUpdate == true {
+
+                updateLocationRecord(completion: nil)
             }
-            
         }
     }
     

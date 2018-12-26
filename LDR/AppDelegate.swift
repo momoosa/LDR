@@ -19,19 +19,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        if let value = launchOptions?[.location] as? Bool, value == true {
+
         if let savedIdentifier = UserDefaults.standard.string(forKey: "SavedRecordID") {
             
             let identifier = CKRecord.ID(recordName: savedIdentifier)
             CloudKitService.shared.fetchRecord(identifier) { (record, error) in
                 
-            }
-            setupLocalNotification { (error) in
+                // TODO: Remove this logic from the ViewController.
                 
+                (self.window?.rootViewController as! ViewController).updateLocationRecord(completion: { record, error in
+                    
+                    if record?.usersAreNearEachOther() == true {
+                        
+                        self.setupLocalNotification { (error) in
+                            
+                        }
+                    }
+                })
+
             }
+            
         }
 
-        if let value = launchOptions?[.location] as? Bool, value == true {
-            
+        
         }
         
         return true

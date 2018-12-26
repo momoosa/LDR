@@ -24,18 +24,50 @@ final class UserSharedLocationRecord: NSObject {
     override init() {
         self.identifier = UUID().uuidString
     }
+    
+    func usersAreNearEachOther() -> Bool {
+        
+        guard let firstLocation = firstUserLocation, let secondLocation = secondUserLocation else {
+            return false
+        }
+        
+        guard let firstDate = firstUserLocationModifiedDate, let secondDate = secondUserLocationModifiedDate else {
+            return false
+        }
+
+        // TODO: Check modified dates?
+        return firstLocation.distance(from: secondLocation) < 50
+        
+    }
 }
 
 extension UserSharedLocationRecord: Syncable {
     func JSONRepresentation() -> [String : Any] {
         var dictionary = [String: Any]()
         
+        dictionary[#keyPath(identifier)] = identifier
         dictionary[#keyPath(firstUserLocation)] = firstUserLocation
         dictionary[#keyPath(secondUserLocation)] = secondUserLocation
         dictionary[#keyPath(firstUserIdentifier)] = firstUserIdentifier
         dictionary[#keyPath(secondUserIdentifier)] = secondUserIdentifier
+        dictionary[#keyPath(firstUserLocationModifiedDate)] = firstUserLocationModifiedDate
+        dictionary[#keyPath(secondUserLocationModifiedDate)] = secondUserLocationModifiedDate
+
         
         return dictionary
+    }
+    
+    func updateFromDictionary(_ dictionary: [AnyHashable : Any]) {
+        
+        identifier = dictionary[#keyPath(identifier)] as? String ?? identifier
+        
+        firstUserLocation = dictionary[#keyPath(firstUserLocation)] as? CLLocation
+        firstUserIdentifier = dictionary[#keyPath(firstUserIdentifier)] as? String
+        firstUserLocationModifiedDate = dictionary[#keyPath(firstUserLocationModifiedDate)] as? Date
+
+        secondUserIdentifier = dictionary[#keyPath(secondUserIdentifier)] as? String
+        secondUserLocation = dictionary[#keyPath(secondUserLocation)] as? CLLocation
+        secondUserLocationModifiedDate = dictionary[#keyPath(secondUserLocationModifiedDate)] as? Date
     }
     
     var syncableID: String? {
@@ -49,4 +81,5 @@ extension UserSharedLocationRecord: Syncable {
     static var remotePrimaryKey: String {
         return #keyPath(identifier)
     }
+    
 }

@@ -16,7 +16,8 @@ public typealias CloudKitServiceRecordsCompletion = ([CKRecord]?, Error?) -> ()
 public typealias CloudKitServiceCompletion = (Any?, Error?) -> ()
 
 enum CloudKitServiceError: Error {
-    case missingRecord
+    case missingRecord,
+    missignIdentifier
 }
 
 
@@ -215,15 +216,17 @@ final class CloudKitService {
             
             for localObject in syncables {
                 guard let syncableID = localObject.syncableID else {
+                    completion(nil, CloudKitServiceError.missignIdentifier)
                     return
                 }
-                let recordID = CKRecord.ID(recordName: syncableID)
                 let recordType = String(describing: type)
+                let recordID = CKRecord.ID(recordName: syncableID)
+
+                let recordToSave = recordsDictionary[syncableID] ?? CKRecord(recordType: recordType, recordID: recordID)
+            
                 
-                let record = CKRecord(recordType: recordType, recordID: recordID)
-                
-                record.update(withDictionary: localObject.JSONRepresentation())
-                recordsToSave.append(record)
+                recordToSave.update(withDictionary: localObject.JSONRepresentation())
+                recordsToSave.append(recordToSave)
             }
             
             let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: nil)
@@ -241,7 +244,5 @@ final class CloudKitService {
             
             self.publicDatabase.add(operation)
         }
-        
     }
-    
 }
